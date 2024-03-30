@@ -1,7 +1,6 @@
 import discord
 import random
 import time
-import requests
 import EggBotSifre
 
 from discord.ext import commands
@@ -52,8 +51,7 @@ async def Sucuk(ctx, sayi = 0):
 async def SucukAbout(ctx):
     await ctx.send('$Sucuk {sayi}, sayi kadar alt alta "Sucuk" der.')
 
-for i in range(1):
-    #FIXME: 
+for i in range(1): 
     @bot.command()
     async def matematik(ctx, sayi = 0):
         if sayi > 2:
@@ -63,8 +61,6 @@ for i in range(1):
         time.sleep(1)
         await ctx.send('Bu oyunda aşağıda bir matematik işlemi verilecek ve siz de bu işlemi çözmeye çalışacaksınız!')
         time.sleep(2)
-        await ctx.send('Verilen işlemi çözmek için 10 saniyeniz olacak.')
-        time.sleep(1)
         await ctx.send('İsterseniz oyunu zorlaştırmak için 1 işlemli değil 2 işlemli sorular haline getirebilirsiniz!')
         time.sleep(3)
         await ctx.send('İşte Sorunuz:')
@@ -78,6 +74,7 @@ for i in range(1):
         elif d == '+':
             cevap += a+b
         elif d == '-':
+            #!Cevap (cevap)
             cevap += a-b
         async def Cevap(ctx, sayi = 0):
             if sayi == cevap:
@@ -87,95 +84,96 @@ for i in range(1):
                 time.sleep(1)
                 await ctx.sleep(f'Doğru cevap : {cevap}')
 
+@bot.event
+async def on_message(message):
+    if message.author == bot.user:
+        return
 
-    @bot.command()
-    async def matematikyine(ctx, sayi = 0):
-        #----------------------------------------------------------------
-        await ctx.send("2 sayılı mı olacak, 3'mü?:")
-        sayi = ctx.author.send()
-        if sayi != int:
-            await ctx.send('Lütfen sayı giriniz!')
-            time.sleep(1)
-        time.sleep(3)
-        #----------------------------------------------------------------
-        if sayi == 2:
-            await ctx.send('İşte Sorunuz:')
-            time.sleep(1)
-            start_time = time.time()
-            await ctx.send(f'{a}{d}{b}')
-            if d == '/':
-                cevap += a//b
-            elif d == '*':
-                cevap += a*b
-            elif d == '+':
-                cevap += a+b
-            elif d == '-':
-                cevap += a-b
-            
-            if ctx.author.send() == cevap:
-                await ctx.send('Doğru cevap!')
-                global score
-                score += 1
-
-            else:
-                await ctx.send('Cevabınız yanlış!')
-                time.sleep(1)
-                await ctx.sleep(f'Doğru cevap : {cevap}')
-
-        elif sayi == 3:
-            await ctx.send('İşte Sorunuz:')
-            time.sleep(1)
-            start_time = time.time()
-            await ctx.send(f'{a}{d}{b}{e}{c}')
-
-            if d == '/' and e == '*':
-                cevap += a//b*c
-
-            elif d == '/' and e == '+':
-                cevap += a//b+c
-
-            elif d == '/' and e == '-':
-                cevap += a//b-c
-
-            elif d == '*' and e == '/':
-                cevap += a*b//c
-
-            elif d == '*' and e == '+':
-                cevap += a*b+c
-
-            elif d == '*' and e == '-':
-                cevap += a*b-c
-
-            elif d == '+' and e == '/':
-                cevap += a+b//c
-
-            elif d == '+' and e == '*':
-                cevap += a+b*c
-
-            elif d == '+' and e == '-':
-                cevap += a+b-c
-
-            elif d == '-' and e == '/':
-                cevap += a-b//c
-
-            elif d == '-' and e == '*':
-                cevap += a-b*c
-
-            elif d == '-' and e == '+':
-                cevap += a-b+c
-
-            if ctx.author.send() == cevap:
-                await ctx.send('Doğru cevap!')
-                score += 1
-                print(score)
-            
-            elif ctx.author.send() != cevap:
-                await ctx.send('Cevabınız yanlış!')
-                time.sleep(1)
-                await ctx.sleep(f'Doğru cevap : {cevap}')
+@bot.command()
+async def matematikyine(ctx, sayi = 0):
+    await ctx.send("İşlem 2 sayılı mı olacak, 3'mü?:")
+    tahmin_mesaji = await bot.wait_for("message", check=lambda m: m.author == ctx.author)
+    sayi = tahmin_mesaji.content
+    if sayi != int:
+        await ctx.send('Lütfen bir sayı giriniz(2-3)')
+        time.sleep(1)
+    if sayi == 2:
+        await ctx.send('İşte Sorunuz:')
+        time.sleep(1)
+        await ctx.send(f'{a}{d}{b}')
+        if d == '/':
+            cevap += a//b
+        elif d == '*':
+            cevap += a*b
+        elif d == '+':
+            cevap += a+b
+        elif d == '-':
+            cevap += a-b
         
-        elif sayi != 2 or 3:
-            await ctx.send('Girmeniz gereken komut = Sayı:(sayı). Sayı sadece 2 veya 3 olabilir!')
+        if ctx.author.send() == cevap:
+            await ctx.send('Doğru cevap!')
+            global score
+            score += 1
+
+        else:
+            await ctx.send('Cevabınız yanlış!')
+            time.sleep(1)
+            await ctx.sleep(f'Doğru cevap : {cevap}')
+
+    elif sayi == 3:
+        await ctx.send('İşte Sorunuz:')
+        time.sleep(1)
+        await ctx.send(f'{a}{d}{b}{e}{c}')
+
+        if d == '/' and e == '*':
+            cevap += a//b*c
+
+        elif d == '/' and e == '+':
+            cevap += a//b+c
+
+        elif d == '/' and e == '-':
+            cevap += a//b-c
+
+        elif d == '*' and e == '/':
+            cevap += a*b//c
+
+        elif d == '*' and e == '+':
+            cevap += a*b+c
+
+        elif d == '*' and e == '-':
+            cevap += a*b-c
+
+        elif d == '+' and e == '/':
+            cevap += a+b//c
+
+        elif d == '+' and e == '*':
+            cevap += a+b*c
+
+        elif d == '+' and e == '-':
+            cevap += a+b-c
+
+        elif d == '-' and e == '/':
+            cevap += a-b//c
+
+        elif d == '-' and e == '*':
+            cevap += a-b*c
+
+        elif d == '-' and e == '+':
+            cevap += a-b+c
+
+        if ctx.author.send() == cevap:
+            await ctx.send('Doğru cevap!')
+            score += 1
+            print(score)
+            
+        elif ctx.author.send() != cevap:
+            await ctx.send('Cevabınız yanlış!')
+            time.sleep(1)
+            await ctx.sleep(f'Doğru cevap : {cevap}')
+        
+    elif sayi != 2 or 3:
+        await ctx.send('Girmeniz gereken komut = Sayı:(sayı). Sayı sadece 2 veya 3 olabilir!')
+
 @bot.command()
 async def MatematikAbout(ctx):
     await ctx.send('Matematik oyunu açar(Yakında gelecek...)')
